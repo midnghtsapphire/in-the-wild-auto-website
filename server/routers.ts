@@ -5,7 +5,8 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { blueOceanRouter } from "./blueOceanRouters";
 import { generateFullStack } from "./services/fullStackGenerator";
-import { getDb, upsertGeneration, getUserTokenUsage, updateTokenUsage } from "./db";
+import { generateMobileApp } from "./services/mobileAppGenerator";
+import { getDb, upsertGeneration, getUserTokenUsage, updateTokenUsage, getProjectsByUser, getProjectById } from "./db";
 import { TRPCError } from "@trpc/server";
 
 export const appRouter = router({
@@ -98,39 +99,21 @@ export const appRouter = router({
     getProject: protectedProcedure
       .input(z.object({ projectId: z.number() }))
       .query(async ({ ctx, input }) => {
-        const db = await getDb();
-        if (!db) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Database unavailable",
-          });
+        const project = await getProjectById(input.projectId);
+        if (!project) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
         }
-
-        // TODO: Fetch from database
-        return {
-          id: input.projectId,
-          name: "Sample Project",
-          prompt: "A simple todo app",
-          status: "generated",
-          createdAt: new Date(),
-          frontend: "<html>...</html>",
-          backend: "// Express routes",
-          database: "// Schema",
-          deploymentUrl: "https://example.manus.space",
-        };
+        if (project.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+        return project;
       }),
 
     /**
      * List user's projects
      */
     listProjects: protectedProcedure.query(async ({ ctx }) => {
-      const db = await getDb();
-      if (!db) {
-        return [];
-      }
-
-      // TODO: Query from database
-      return [];
+      return getProjectsByUser(ctx.user.id);
     }),
 
     /**
@@ -152,6 +135,37 @@ export const appRouter = router({
             message: "Deployment failed",
           });
         }
+      }),
+
+    /**
+     * Generate a React Native mobile app from an existing project
+     */
+    generateMobileApp: protectedProcedure
+      .input(
+        z.object({
+          projectId: z.number(),
+          appName: z.string().min(1),
+          packageName: z.string().min(1),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const project = await getProjectById(input.projectId);
+        if (!project) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
+        }
+        if (project.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+
+        const result = await generateMobileApp(
+          project.generatedHtml || "",
+          project.generatedCss || "",
+          project.generatedJs || "",
+          input.appName,
+          input.packageName
+        );
+
+        return result;
       }),
   }),
 
