@@ -1,7 +1,8 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/Logo";
 import { getLoginUrl } from "@/const";
-import { Zap, Code, Database, Rocket, CheckCircle2 } from "lucide-react";
+import { Code, Database, Rocket, CheckCircle2 } from "lucide-react";
 
 /**
  * InTheWild Landing Page
@@ -30,14 +31,7 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-purple-800/30 bg-black/20 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-              InTheWild
-            </h1>
-          </div>
+          <Logo />
           <a href={getLoginUrl()}>
             <Button variant="outline" className="border-green-500/50 text-green-400 hover:bg-green-500/10">
               Sign In

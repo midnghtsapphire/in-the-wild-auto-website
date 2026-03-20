@@ -2,9 +2,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/Logo";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { Loader2, Zap, CheckCircle2, Star, Building2, ArrowLeft } from "lucide-react";
+import { Loader2, CheckCircle2, Star, Building2, ArrowLeft, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 const PLANS = [
@@ -105,14 +106,7 @@ export default function Billing() {
               </a>
             </Link>
             <div className="w-px h-6 bg-slate-700" />
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-                InTheWild
-              </h1>
-            </div>
+            <Logo size="sm" />
           </div>
         </div>
       </header>

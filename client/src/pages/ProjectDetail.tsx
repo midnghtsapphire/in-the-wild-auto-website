@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Logo } from "@/components/Logo";
 import { trpc } from "@/lib/trpc";
 import { Link, useRoute } from "wouter";
 import {
-  Loader2, Zap, ArrowLeft, Rocket, Code, Database, Smartphone, ExternalLink,
+  Loader2, ArrowLeft, Rocket, Code, Database, Smartphone, ExternalLink,
   CheckCircle2, AlertCircle, Copy, Check,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -112,14 +113,7 @@ export default function ProjectDetail() {
               </a>
             </Link>
             <div className="w-px h-6 bg-slate-700" />
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-                InTheWild
-              </h1>
-            </div>
+            <Logo size="sm" />
           </div>
           {project?.deployUrl ? (
             <a href={project.deployUrl} target="_blank" rel="noopener noreferrer">

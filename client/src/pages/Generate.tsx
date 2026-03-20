@@ -3,8 +3,9 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Logo } from "@/components/Logo";
 import { trpc } from "@/lib/trpc";
-import { Loader2, Rocket, Code, Database, Zap, ArrowLeft } from "lucide-react";
+import { Loader2, Rocket, Code, Database, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 
@@ -67,13 +68,8 @@ export default function Generate() {
       <header className="border-b border-purple-800/30 bg-black/20 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-                InTheWild
-              </h1>
+            <a className="flex items-center">
+              <Logo />
             </a>
           </Link>
           <div className="flex items-center gap-4">

@@ -2,9 +2,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/Logo";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { Loader2, Zap, Plus, FolderOpen, Rocket, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2, Plus, FolderOpen, Rocket, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 
 const STATUS_CONFIG = {
   generating: { label: "Generating", icon: Loader2, className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
@@ -39,13 +40,8 @@ export default function Projects() {
       <header className="border-b border-purple-800/30 bg-black/20 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-                InTheWild
-              </h1>
+            <a className="flex items-center">
+              <Logo />
             </a>
           </Link>
           <div className="flex items-center gap-4">
