@@ -287,7 +287,7 @@ export default function ProjectDetail() {
                         mobileGenMutation.mutate({
                           projectId,
                           appName: appName || project.name,
-                      packageName: packageName || `com.midnghtsapphire.${project.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`,
+                      packageName: packageName || `com.inthewild.${project.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`,
                         })
                       }
                       disabled={mobileGenMutation.isPending}

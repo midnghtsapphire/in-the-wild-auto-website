@@ -1,0 +1,99 @@
+# DigitalOcean App Platform Spec — InTheWild
+#
+# Deploy with:
+#   doctl apps create --spec deploy/digitalocean-app.yaml
+#
+# Update existing app:
+#   doctl apps update <APP_ID> --spec deploy/digitalocean-app.yaml
+#
+# Required environment variables must be set in the DO App Platform dashboard
+# or added under the `envs` section below (mark sensitive vars as SECRET).
+#
+# See: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+
+name: in-the-wild
+region: nyc
+
+# ─── Main App Service ─────────────────────────────────────────────────────────
+services:
+  - name: web
+    # Source: GitHub Container Registry image built by CI/CD
+    image:
+      registry_type: GHCR
+      registry: midnghtsapphire
+      repository: in-the-wild-auto-website
+      tag: latest
+
+    # HTTP
+    http_port: 3000
+    instance_size_slug: basic-xxs   # $5/mo — upgrade to basic-xs ($12/mo) for production
+    instance_count: 1
+
+    # Health check
+    health_check:
+      http_path: /api/trpc/system.health
+      initial_delay_seconds: 30
+      period_seconds: 30
+      timeout_seconds: 5
+      failure_threshold: 3
+      success_threshold: 1
+
+    # Environment variables
+    # Mark sensitive values as SECRET — DO will encrypt them at rest
+    envs:
+      - key: NODE_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+
+      - key: PORT
+        value: "3000"
+        scope: RUN_TIME
+
+      # ── Database ──────────────────────────────────────────────────────────
+      # Set this to your DO Managed MySQL connection string
+      # Format: mysql://USER:PASS@host.b.db.ondigitalocean.com:25060/inthewild?ssl=true
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+
+      # ── Auth ──────────────────────────────────────────────────────────────
+      - key: JWT_SECRET
+        scope: RUN_TIME
+        type: SECRET
+
+      # ── OpenRouter (LLM) ──────────────────────────────────────────────────
+      - key: OPENROUTER_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+      # ── Stripe ────────────────────────────────────────────────────────────
+      - key: STRIPE_MODE
+        value: live          # change to "test" for staging
+        scope: RUN_TIME
+
+      - key: STRIPE_LIVE_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+      - key: STRIPE_LIVE_PUBLISHABLE_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+      - key: STRIPE_TEST_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+      - key: STRIPE_TEST_PUBLISHABLE_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+# ─── Recommended: Add a DO Managed MySQL Database ─────────────────────────────
+# Uncomment this block to provision a managed database alongside your app.
+# The DATABASE_URL env var will be injected automatically.
+#
+# databases:
+#   - name: inthewild-db
+#     engine: MYSQL
+#     version: "8"
+#     size: db-s-1vcpu-1gb    # $15/mo — smallest available
+#     num_nodes: 1

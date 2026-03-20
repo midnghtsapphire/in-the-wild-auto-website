@@ -29,6 +29,8 @@ jobs:
   test:
     name: Type-check & Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -99,9 +101,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
     environment:
       name: production
-      url: https://inthewild.dev
+      # Update DEPLOY_URL in GitHub repository variables (Settings → Variables → Actions)
+      # to match your actual DigitalOcean App Platform URL once the app is created.
+      url: ${{ vars.DEPLOY_URL || 'https://inthewild.dev' }}
 
     steps:
       - uses: actions/checkout@v4
