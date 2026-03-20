@@ -5,36 +5,97 @@
 
 ---
 
-## 1. Current Brand — What's Already In the App
+## 1. Current Brand — What's In the App
 
-The branding **is** live and consistent. Here's the full inventory:
+The branding is live, consistent, and fully centralised. Full inventory:
 
 | Element | Current value | Location |
 |---|---|---|
 | **Product name** | InTheWild | `client/src/components/Logo.tsx` → `APP_NAME` |
-| **Logo icon** | Lucide `<Zap>` (lightning bolt) | `client/src/components/Logo.tsx` → icon |
+| **Logo mark** | Custom ITW mark (see §2 below) | `client/src/components/Logo.tsx` → `ITWMark` |
 | **Icon gradient** | `from-purple-500 to-green-500` | `client/src/components/Logo.tsx` → `ICON_GRADIENT` |
 | **Text gradient** | `from-purple-400 to-green-400` | `client/src/components/Logo.tsx` → `TEXT_GRADIENT` |
 | **Page background** | `from-purple-950 via-slate-900 to-green-950` | All pages, dark cinematic |
 | **Primary tagline** | "Full-Stack From Soup To Nuts" | `Home.tsx` hero |
 | **Secondary tagline** | "The Lovable Killer" | `Home.tsx` badge |
-| **Favicon** | SVG lightning bolt on purple-green gradient bg | `client/public/favicon.svg` |
+| **Favicon** | Same ITW mark, 32 × 32 SVG | `client/public/favicon.svg` |
 | **Browser tab title** | "InTheWild — Full-Stack AI App Generator" | `client/index.html` |
 
-> **To rebrand the entire app** — name, icon, and colours — edit **one file only:**  
-> `client/src/components/Logo.tsx` (lines `ICON_GRADIENT`, `TEXT_GRADIENT`, `APP_NAME`)
+> **To rebrand the entire app** — name, icon, colours — edit **one file only:**  
+> `client/src/components/Logo.tsx`
 
 ---
 
-## 2. Is the Branding Generic or Audience-Specific?
+## 2. The ITW Mark — Custom Logo
 
-**Currently:** generic-developer tone. "InTheWild" and "Soup to Nuts" will land with technical builders but may confuse non-technical users.
+The app now uses a **purpose-built custom SVG mark** instead of a generic Lucide icon.
 
-**This matters because InTheWild has two distinct audience segments:**
+### Design
+
+```
+  ●           ●        ← circuit nodes (filled circles, r = 2.2)
+   \         /
+    \       /
+     \  ●  /          ← centre-peak node
+      \/  \/
+      /\  /\
+     /  \/  \
+    /   /\   \        ← W valleys (open, no nodes)
+   /   /  \   \
+```
+
+Rendered at all sizes used in the app:
+
+![ITW mark at all sizes](assets/itw-mark-sizes.svg)
+
+### Anatomy
+
+| Element | Description |
+|---|---|
+| **W letterform** | A single `<path>` stroke tracing the five points of the letter W |
+| **Three circuit nodes** | Filled `<circle>` elements at the top-left, top-right, and centre-peak coordinates — where the W "reaches up" |
+| **Rounded stroke caps** | `stroke-linecap="round"` gives organic warmth; valleys are cap-terminated (no node), keeping the mark light |
+| **Container** | Rounded-square div with `bg-gradient-to-br from-purple-500 to-green-500` — the mark sits inside at full width with 6 px padding |
+
+### Why this mark works
+
+- **Unambiguous lettermark** — starts with the "W" from "Wild"; reads correctly at 16 px (smallest browser tab size)
+- **Circuit-board metaphor** — three pads connected by copper traces; immediately communicates code / tech
+- **Git-branch metaphor** — three nodes branching from a shared trunk; resonates with developers
+- **Distinct silhouette** — the W + three dots is recognisable even as a blurred favicon thumbnail; no competitor uses it
+- **No third-party dependency** — pure inline SVG; removes the Lucide `<Zap>` import entirely
+
+### Coordinates (SVG viewBox `0 0 24 24`)
+
+| Point | x | y | Has node? |
+|---|---|---|---|
+| Top-left tip | 2 | 4 | ✅ r = 2.2 |
+| Left valley | 7 | 20 | — |
+| Centre peak | 12 | 11 | ✅ r = 2.2 |
+| Right valley | 17 | 20 | — |
+| Top-right tip | 22 | 4 | ✅ r = 2.2 |
+
+### Favicon coordinates (32 × 32 canvas, ≈ 6 px padding)
+
+| Point | x | y |
+|---|---|---|
+| Top-left tip | 5 | 8 |
+| Left valley | 10 | 26 |
+| Centre peak | 16 | 15 |
+| Right valley | 22 | 26 |
+| Top-right tip | 27 | 8 |
+
+---
+
+## 3. Is the Branding Generic or Audience-Specific?
+
+**Currently:** strong developer tone. "InTheWild" and "Soup to Nuts" land well with technical builders; the circuit-node mark reinforces the code/git metaphor.
+
+**InTheWild has two distinct audience segments:**
 
 ### Segment A — Technical Builders (Indie Developers / Solo Founders)
 - Want speed and completeness: "give me a real app, not a Figma mockup"
-- Respond to: raw power language, anti-establishment framing ("Lovable Killer"), dark theme
+- Respond to: raw power language, anti-establishment framing ("Lovable Killer"), dark theme, circuit-board motifs
 - Current brand fits this audience **well**
 
 ### Segment B — Non-Technical Entrepreneurs / Creators
@@ -44,7 +105,7 @@ The branding **is** live and consistent. Here's the full inventory:
 
 ---
 
-## 3. Naming Options (by audience + genre)
+## 4. Naming Options (by audience + genre)
 
 The name `InTheWild` is strong — it implies production-ready, real-world deployment ("software out in the wild"). It also connects naturally to the **Revvel** music ecosystem (underground, unfiltered, raw). Consider keeping it.
 
@@ -78,17 +139,7 @@ If you ever want to pivot the brand per audience, here are options:
 
 ---
 
-## 4. Logo / Icon Upgrade Path
-
-The current icon is Lucide's generic `<Zap>`. It's used by Vercel, dozens of SaaS apps, and countless other projects. Consider upgrading to a custom SVG when budget allows.
-
-### Logo concept ideas (matching "InTheWild" brand)
-- **Lightning bolt in a rounded square** (current) — keep for now, very readable at small sizes
-- **Stylized "W" with a spark** — initials W for "Wild", with an energy motif
-- **A fragment of circuit board shaped like a lightning bolt** — tech-forward, custom
-- **Abstract animal silhouette** — a wolf or fox mid-stride (plays on "in the wild"), very distinctive but off-brand for a dev tool
-
-### Recommended colour tokens to keep
+## 5. Colour Tokens
 ```
 Primary gradient: purple-500 (#a855f7) → green-500 (#22c55e)
 Background:       purple-950 (#2e1065) via slate-900 (#0f172a) → green-950 (#052e16)
@@ -99,7 +150,7 @@ This palette is distinctive — it doesn't copy Vercel (black/white), Lovable (p
 
 ---
 
-## 5. Tagline Options
+## 6. Tagline Options
 
 | Tagline | Audience | Tone |
 |---|---|---|
@@ -114,19 +165,22 @@ This palette is distinctive — it doesn't copy Vercel (black/white), Lovable (p
 
 ---
 
-## 6. How to Change the Name or Colours
+## 7. How to Change the Name, Colours, or Mark
 
-Everything is centralized in **one file:**
+Everything is centralised in **one file:**
 
 ```
 client/src/components/Logo.tsx
 ```
 
-Edit these three lines:
+To change the **name or gradient colours**, edit these three constants:
 ```typescript
-const ICON_GRADIENT = "from-purple-500 to-green-500";  // icon square background
-const TEXT_GRADIENT = "from-purple-400 to-green-400";  // wordmark gradient
+const ICON_GRADIENT = "from-purple-500 to-green-500";  // icon box background
+const TEXT_GRADIENT = "from-purple-400 to-green-400";  // wordmark text gradient
 const APP_NAME = "InTheWild";                           // the name shown everywhere
 ```
 
-Page backgrounds and button gradients still use inline Tailwind classes across the pages. A future clean-up could extract those to CSS variables in `client/src/index.css`.
+To change the **icon shape**, edit the `ITWMark` SVG component in the same file.  
+The favicon (`client/public/favicon.svg`) uses its own copy of the mark — keep the two in sync when editing.
+
+Page backgrounds and button gradients still use inline Tailwind classes across pages. A future clean-up could extract those to CSS custom properties in `client/src/index.css`.
