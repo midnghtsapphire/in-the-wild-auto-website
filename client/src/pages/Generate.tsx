@@ -47,7 +47,7 @@ export default function Generate() {
 
     const selectedPlatforms = Object.entries(platforms)
       .filter(([_, selected]) => selected)
-      .map(([platform, _]) => platform);
+      .map(([platformName, _]) => platformName);
 
     if (selectedPlatforms.length === 0) {
       toast.error("Please select at least one platform");
