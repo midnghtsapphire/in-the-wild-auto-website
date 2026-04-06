@@ -1,58 +1,46 @@
-# InTheWild - Full-Stack AI Website Generator
+# Reese-Reviews - Professional Content & Social Media Platform
 
-**Tagline:** "Full-Stack From Soup To Nuts - Everything"
+**Tagline:** "Professional Reviews & Content"
 
-InTheWild is a lean, fast AI website generator that builds **complete full-stack applications** — not just landing pages. Unlike Lovable (which only generates frontends), InTheWild generates real backends, real databases, and handles instant deployment.
-
-## The Lovable Killer
-
-**Lovable's Weakness:** It builds pretty landing pages but the backend never actually gets built.
-
-**InTheWild's Strength:** We build the complete stack in minutes:
-- ✅ React frontend with components
-- ✅ Express.js backend with routes, controllers, middleware
-- ✅ Database schema, migrations, and models
-- ✅ Authentication & authorization
-- ✅ Error handling & validation
-- ✅ Docker deployment ready
-- ✅ GitHub repo with all code
+Reese-Reviews is a unified platform for creating professional reviews and managing social media content across multiple platforms. Built with a clean, professional steel/neutral design aesthetic.
 
 ## Features
 
-### Core Differentiator: Full-Stack Generation
-- **Real Backends:** Express.js routes, controllers, middleware — actual working code, not templates
-- **Real Databases:** Schema generation, migrations, models — complete data layer
-- **Instant Deploy:** Live in minutes with hosting, database, and environment config
+### Content Creation & Management
+- Professional review writing interface
+- Multi-platform publishing (Facebook, LinkedIn, Instagram, TikTok)
+- Content scheduling and automation
+- Marketing budget management
 
-### AI-Powered Generation
-- **Parallel LLM Processing:** Sends prompts to 2 free uncensored LLM models via OpenRouter
-- **Auto-Verification:** Syntax and security checks on generated code
-- **Smart Code Generation:** Understands features, data models, and user flows
+### Social Media Integration
+- **Facebook** - Automated posting with engagement tracking
+- **LinkedIn** - Professional content distribution
+- **Instagram** - Visual content management
+- **TikTok** - Short-form video content integration
 
-### User Management
-- **Authentication:** Email/password + Google OAuth via built-in auth system
-- **Token Tracking:** Visual analytics and quota management per user
-- **Project Management:** My Projects dashboard with preview, edit, deploy
+### Analytics & Performance
+- Engagement tracking across all platforms
+- Reach and impression analytics
+- Budget spend monitoring
+- Performance reporting
 
-### Billing & Tiers
-- **Free Tier:** 50,000 tokens/month, 2 free LLM models, basic generation
-- **Pro Tier:** 500,000 tokens/month, premium models, advanced features, custom domains
-- **Business Tier:** 5M tokens/month, unlimited API calls, dedicated support, SLA
-- **Stripe Integration:** Test and live mode support with seamless switching
+### Brand Management
+- Logo management and customization
+- Consistent branding across all platforms
+- Professional steel/neutral design theme
 
 ## Quick Start
 
 ### Prerequisites
 - Node.js 22+
 - MySQL 8.0+
-- OpenRouter API key
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/MIDNGHTSAPPHIRE/in-the-wild.git
-cd in-the-wild
+git clone https://github.com/MIDNGHTSAPPHIRE/reese-reviews.git
+cd reese-reviews
 
 # Install dependencies
 pnpm install
@@ -74,17 +62,7 @@ See `.env.example` for the complete list. Key variables:
 
 ```env
 # Database
-DATABASE_URL=mysql://user:password@localhost:3306/inthewild
-
-# OpenRouter (for LLM generation)
-OPENROUTER_API_KEY=your_openrouter_api_key
-
-# Stripe (test/live modes)
-STRIPE_MODE=test
-STRIPE_TEST_SECRET_KEY=sk_test_...
-STRIPE_TEST_PUBLISHABLE_KEY=pk_test_...
-STRIPE_LIVE_SECRET_KEY=sk_live_...
-STRIPE_LIVE_PUBLISHABLE_KEY=pk_live_...
+DATABASE_URL=mysql://user:password@localhost:3306/reesereviews
 
 # JWT Secret
 JWT_SECRET=your_jwt_secret_key
@@ -109,13 +87,12 @@ docker-compose down
 
 ```bash
 # Build image
-docker build -t inthewild .
+docker build -t reese-reviews .
 
 # Run container
 docker run -p 3000:3000 \
   -e DATABASE_URL=mysql://... \
-  -e OPENROUTER_API_KEY=... \
-  inthewild
+  reese-reviews
 ```
 
 ## Architecture
@@ -125,20 +102,12 @@ docker run -p 3000:3000 \
 - **Routing:** Wouter (lightweight)
 - **Styling:** Tailwind CSS 4 + shadcn/ui
 - **State:** tRPC + React Query
-- **Theme:** Purple/green gradient, dark mode
+- **Theme:** Steel/neutral palette, dark mode support
 
 ### Backend
 - **Framework:** Express 4 + tRPC 11
 - **Database:** MySQL 8.0 with Drizzle ORM
 - **Auth:** Custom OAuth integration
-- **LLM:** OpenRouter API (parallel processing)
-- **Payments:** Stripe (test/live modes)
-
-### Full-Stack Generator
-- **Frontend Generation:** React components, routing, state management
-- **Backend Generation:** Express routes, controllers, middleware, error handling
-- **Database Generation:** Schema, migrations, models, relationships
-- **Deployment:** Docker config, environment setup, hosting integration
 
 ## Development
 
@@ -149,9 +118,9 @@ client/              # React frontend
   src/
     pages/           # Page components
     components/      # Reusable UI components
-    lib/             # tRPC client
+    lib/             # Utilities and tRPC client
 server/              # Express backend
-  services/          # Business logic (LLM, generation, deployment)
+  services/          # Business logic
   routers.ts         # tRPC API routes
   db.ts              # Database queries
 drizzle/             # Database schema & migrations
@@ -178,66 +147,19 @@ pnpm check
 pnpm format
 ```
 
-## API Documentation
-
-### Generation API
-
-**Generate Full-Stack App**
-```typescript
-trpc.generation.generate.useMutation({
-  prompt: "A todo app with user auth and categories",
-  projectName: "my-todo-app"
-})
-```
-
-**Get Project**
-```typescript
-trpc.generation.getProject.useQuery({ projectId: 123 })
-```
-
-**List Projects**
-```typescript
-trpc.generation.listProjects.useQuery()
-```
-
-**Deploy Project**
-```typescript
-trpc.generation.deploy.useMutation({ projectId: 123 })
-```
-
-### Billing API
-
-**Get Usage**
-```typescript
-trpc.billing.getUsage.useQuery()
-```
-
-**Get Plans**
-```typescript
-trpc.billing.getPlans.useQuery()
-```
-
-**Create Checkout**
-```typescript
-trpc.billing.createCheckout.useMutation({ planId: "pro" })
-```
-
 ## Deployment
 
 ### Production Checklist
 
-- [ ] Set `STRIPE_MODE=live` for production
 - [ ] Configure production database
 - [ ] Set secure `JWT_SECRET`
-- [ ] Configure OpenRouter API key
-- [ ] Set up Stripe live keys
 - [ ] Configure custom domain
 - [ ] Enable SSL/TLS
 - [ ] Set up monitoring & logging
 
 ### Hosting Options
 
-InTheWild can be deployed to:
+Reese-Reviews can be deployed to:
 - **Docker:** Any container platform (AWS ECS, Google Cloud Run, Azure Container Instances)
 - **VPS:** DigitalOcean, Linode, Vultr
 - **Platform:** Railway, Render, Fly.io
@@ -254,9 +176,8 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/MIDNGHTSAPPHIRE/in-the-wild/issues
-- Email: support@inthewild.dev
+- GitHub Issues: https://github.com/MIDNGHTSAPPHIRE/reese-reviews/issues
 
 ---
 
-**Built with OpenRouter • Powered by uncensored LLMs**
+**Built for professional content creators**

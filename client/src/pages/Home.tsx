@@ -1,20 +1,21 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/Logo";
 import { getLoginUrl } from "@/const";
-import { Zap, Code, Database, Rocket, CheckCircle2 } from "lucide-react";
+import { BRANDING } from "@/lib/branding";
+import { Star, Users, TrendingUp, CheckCircle2 } from "lucide-react";
 
 /**
- * InTheWild Landing Page
- * LEAN & FAST - No bloat, just the core message:
- * We build COMPLETE full-stack apps (not just landing pages like Lovable)
+ * Reese-Reviews Landing Page
+ * Clean, professional design with steel/neutral branding
  */
 export default function Home() {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-slate-900 to-green-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
       </div>
     );
   }
@@ -26,20 +27,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-slate-900 to-green-950 text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50">
       {/* Header */}
-      <header className="border-b border-purple-800/30 bg-black/20 backdrop-blur-sm">
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-              InTheWild
-            </h1>
-          </div>
+          <Logo size="medium" showText={true} />
           <a href={getLoginUrl()}>
-            <Button variant="outline" className="border-green-500/50 text-green-400 hover:bg-green-500/10">
+            <Button variant="outline" className="border-slate-300 dark:border-slate-700">
               Sign In
             </Button>
           </a>
@@ -51,98 +45,98 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Main Headline */}
           <div className="space-y-4">
-            <div className="inline-block px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-300 mb-4">
-              The Lovable Killer
+            <div className="inline-block px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-700 dark:text-slate-300 mb-4">
+              {BRANDING.TAGLINE}
             </div>
-            <h2 className="text-5xl md:text-6xl font-bold leading-tight">
-              Full-Stack From{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-                Soup To Nuts
+            <h2 className="text-5xl md:text-6xl font-bold leading-tight text-slate-900 dark:text-slate-50">
+              Expert Reviews &{" "}
+              <span className="text-slate-600 dark:text-slate-400">
+                Curated Content
               </span>
             </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Lovable builds pretty landing pages. <span className="text-green-400 font-semibold">We build complete applications</span> — real backends, real databases, real deployment. In minutes.
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Authentic reviews and insights you can trust. Professional content creation and social media management.
             </p>
           </div>
 
           {/* CTA */}
           <div className="flex gap-4 justify-center">
             <a href={getLoginUrl()}>
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white px-8 py-6 text-lg">
-                <Rocket className="w-5 h-5 mr-2" />
-                Start Building Now
+              <Button size="lg" className="bg-slate-900 dark:bg-slate-50 text-slate-50 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 px-8 py-6 text-lg">
+                <Star className="w-5 h-5 mr-2" />
+                Get Started
               </Button>
             </a>
           </div>
 
-          {/* Key Differentiators */}
+          {/* Key Features */}
           <div className="grid md:grid-cols-3 gap-6 mt-16">
-            <div className="bg-black/30 border border-purple-500/20 rounded-lg p-6 space-y-3">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Code className="w-6 h-6 text-purple-400" />
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-6 space-y-3">
+              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <Star className="w-6 h-6 text-slate-700 dark:text-slate-300" />
               </div>
-              <h3 className="text-xl font-semibold text-purple-300">Real Backends</h3>
-              <p className="text-slate-400 text-sm">
-                Express.js routes, controllers, middleware — not templates, actual working code
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50">Expert Reviews</h3>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
+                In-depth, honest reviews from industry professionals
               </p>
             </div>
 
-            <div className="bg-black/30 border border-green-500/20 rounded-lg p-6 space-y-3">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Database className="w-6 h-6 text-green-400" />
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-6 space-y-3">
+              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-slate-700 dark:text-slate-300" />
               </div>
-              <h3 className="text-xl font-semibold text-green-300">Real Databases</h3>
-              <p className="text-slate-400 text-sm">
-                Schema generation, migrations, models — complete data layer, not just mockups
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50">Social Media</h3>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
+                Automated posting to Facebook, LinkedIn, Instagram, and TikTok
               </p>
             </div>
 
-            <div className="bg-black/30 border border-purple-500/20 rounded-lg p-6 space-y-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-green-500/20 rounded-lg flex items-center justify-center">
-                <Rocket className="w-6 h-6 text-green-400" />
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-6 space-y-3">
+              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-slate-700 dark:text-slate-300" />
               </div>
-              <h3 className="text-xl font-semibold bg-gradient-to-r from-purple-300 to-green-300 bg-clip-text text-transparent">
-                Instant Deploy
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50">
+                Analytics
               </h3>
-              <p className="text-slate-400 text-sm">
-                Live in minutes, not hours — complete with hosting, database, and environment config
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
+                Track performance and engagement across all platforms
               </p>
             </div>
           </div>
 
           {/* What You Get */}
-          <div className="mt-20 bg-black/40 border border-purple-500/20 rounded-xl p-8 text-left">
-            <h3 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
-              What You Actually Get
+          <div className="mt-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-8 text-left">
+            <h3 className="text-2xl font-bold text-center mb-8 text-slate-900 dark:text-slate-50">
+              Features
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
               {[
-                "Complete React frontend with components",
-                "Express.js backend with API routes",
-                "Database schema & migrations",
-                "Authentication & authorization",
-                "Error handling & validation",
-                "Environment configuration",
-                "Docker deployment ready",
-                "GitHub repo with all code",
+                "Professional content creation",
+                "Multi-platform publishing",
+                "Engagement analytics",
+                "Automated scheduling",
+                "Budget management",
+                "Performance tracking",
+                "Content management",
+                "Social media integration",
               ].map((feature, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-slate-300">{feature}</span>
+                  <CheckCircle2 className="w-5 h-5 text-slate-600 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-slate-700 dark:text-slate-300">{feature}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Pricing Teaser */}
+          {/* CTA */}
           <div className="mt-16 space-y-4">
-            <h3 className="text-2xl font-bold">Start Free</h3>
-            <p className="text-slate-400">
-              50,000 tokens/month free • 2 uncensored LLM models • No credit card required
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50">Get Started Today</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Professional reviews and content management made simple
             </p>
             <a href={getLoginUrl()}>
-              <Button size="lg" variant="outline" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/10">
-                Get Started Free
+              <Button size="lg" variant="outline" className="border-slate-300 dark:border-slate-700">
+                Create Account
               </Button>
             </a>
           </div>
@@ -150,12 +144,9 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-purple-800/30 bg-black/20 mt-20">
-        <div className="container mx-auto px-4 py-8 text-center text-slate-400 text-sm">
-          <p>InTheWild © 2026 • Full-Stack AI Website Generator</p>
-          <p className="mt-2 text-xs text-slate-500">
-            Built with OpenRouter • Powered by uncensored LLMs
-          </p>
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 mt-20">
+        <div className="container mx-auto px-4 py-8 text-center text-slate-600 dark:text-slate-400 text-sm">
+          <p>{BRANDING.APP_NAME} © 2026 • {BRANDING.TAGLINE}</p>
         </div>
       </footer>
     </div>
