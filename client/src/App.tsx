@@ -7,6 +7,9 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AccessibilityProvider } from "./contexts/AccessibilityContext";
 import Home from "./pages/Home";
 import Generate from "./pages/Generate";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Billing from "./pages/Billing";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -14,6 +17,9 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/generate"} component={Generate} />
+      <Route path={"/projects"} component={Projects} />
+      <Route path={"/project/:id"} component={ProjectDetail} />
+      <Route path={"/billing"} component={Billing} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

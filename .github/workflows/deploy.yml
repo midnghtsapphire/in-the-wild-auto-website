@@ -1,0 +1,131 @@
+# ─── InTheWild CI/CD Pipeline ──────────────────────────────────────────────────
+# Runs on every push to main:
+#   1. Type-check + test
+#   2. Build Docker image
+#   3. Push to GitHub Container Registry (ghcr.io)
+#   4. Deploy to DigitalOcean App Platform
+#
+# Required GitHub repository secrets:
+#   DIGITALOCEAN_ACCESS_TOKEN   — DO personal access token (scope: app read/write)
+#
+# Optional (set in DigitalOcean App Platform environment, not here):
+#   DATABASE_URL, OPENROUTER_API_KEY, JWT_SECRET, STRIPE_* etc.
+# ───────────────────────────────────────────────────────────────────────────────
+
+name: CI/CD — Test, Build, Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ── 1. Type-check and test ─────────────────────────────────────────────────
+  test:
+    name: Type-check & Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check
+        run: pnpm check
+
+      - name: Run tests
+        run: pnpm test
+
+  # ── 2. Build & push Docker image ──────────────────────────────────────────
+  build:
+    name: Build & Push Image
+    runs-on: ubuntu-latest
+    needs: test
+    # Only push on merges to main (not PRs)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable=true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── 3. Deploy to DigitalOcean App Platform ─────────────────────────────────
+  deploy:
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+    environment:
+      name: production
+      # Update DEPLOY_URL in GitHub repository variables (Settings → Variables → Actions)
+      # to match your actual DigitalOcean App Platform URL once the app is created.
+      url: ${{ vars.DEPLOY_URL || 'https://inthewild.dev' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Deploy via App Platform spec
+        run: |
+          # Update app if it already exists, otherwise create it
+          APP_ID=$(doctl apps list --format ID,Spec.Name --no-header 2>/dev/null \
+            | grep "in-the-wild" | awk '{print $1}' | head -1)
+          if [ -n "$APP_ID" ]; then
+            echo "Updating existing App Platform app: $APP_ID"
+            doctl apps update "$APP_ID" --spec deploy/digitalocean-app.yaml
+          else
+            echo "Creating new App Platform app"
+            doctl apps create --spec deploy/digitalocean-app.yaml
+          fi

@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { getLoginUrl } from "@/const";
+import { Code, Database, Rocket, CheckCircle2 } from "lucide-react";
 import { BRANDING } from "@/lib/branding";
 import { Star, Users, TrendingUp, CheckCircle2 } from "lucide-react";
 
@@ -31,6 +32,7 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Logo />
           <Logo size="medium" showText={true} />
           <a href={getLoginUrl()}>
             <Button variant="outline" className="border-slate-300 dark:border-slate-700">

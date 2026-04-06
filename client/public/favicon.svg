@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+
+  <!--
+    ITW Mark — geometric W letterform (same as Logo.tsx).
+    Coordinates scaled to a 32 × 32 canvas with ~6 px padding on each side.
+
+    Tips    : (5, 8)   top-left   and  (27, 8)  top-right
+    Peak    : (16, 15)             centre peak
+    Valleys : (10, 26) and (22, 26)  bottom valleys
+  -->
+  <path
+    d="M5 8 L10 26 L16 15 L22 26 L27 8"
+    stroke="white"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Circuit nodes at the three upper connection points -->
+  <circle cx="5"  cy="8"  r="2.4" fill="white"/>
+  <circle cx="27" cy="8"  r="2.4" fill="white"/>
+  <circle cx="16" cy="15" r="2.4" fill="white"/>
+</svg>

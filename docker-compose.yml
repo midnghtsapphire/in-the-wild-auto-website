@@ -15,8 +15,21 @@ services:
       - STRIPE_TEST_PUBLISHABLE_KEY=${STRIPE_TEST_PUBLISHABLE_KEY}
       - STRIPE_LIVE_SECRET_KEY=${STRIPE_LIVE_SECRET_KEY}
       - STRIPE_LIVE_PUBLISHABLE_KEY=${STRIPE_LIVE_PUBLISHABLE_KEY}
+      # MCP microservice URLs
+      - MCP_WEBSITE_GENERATOR_URL=http://mcp-website-generator:3000
+      - MCP_ANALYTICS_URL=http://mcp-analytics:3000
+      - MCP_PAYMENT_URL=http://mcp-payment:3000
+      - MCP_SEO_URL=http://mcp-seo-accessibility:3000
+      - MCP_CODE_REVIEW_URL=http://mcp-code-review:3000
+      - MCP_AI_CHAT_URL=http://mcp-ai-chat:3000
     depends_on:
       - db
+      - mcp-website-generator
+      - mcp-analytics
+      - mcp-payment
+      - mcp-seo-accessibility
+      - mcp-code-review
+      - mcp-ai-chat
     restart: unless-stopped
 
   db:
@@ -32,5 +45,69 @@ services:
       - db_data:/var/lib/mysql
     restart: unless-stopped
 
+  # ─── MCP Microservices ────────────────────────────────────────────────
+  # These are the InTheWild platform MCP modules from github.com/MIDNGHTSAPPHIRE
+
+  mcp-website-generator:
+    image: ghcr.io/midnghtsapphire/mcp-website-generator:latest
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
+    networks:
+      - default
+
+  mcp-analytics:
+    image: ghcr.io/midnghtsapphire/mcp-analytics:latest
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+    networks:
+      - default
+
+  mcp-payment:
+    image: ghcr.io/midnghtsapphire/mcp-payment:latest
+    environment:
+      - PORT=3000
+      - STRIPE_MODE=${STRIPE_MODE:-test}
+      - STRIPE_TEST_SECRET_KEY=${STRIPE_TEST_SECRET_KEY}
+      - STRIPE_LIVE_SECRET_KEY=${STRIPE_LIVE_SECRET_KEY}
+    restart: unless-stopped
+    networks:
+      - default
+
+  mcp-seo-accessibility:
+    image: ghcr.io/midnghtsapphire/mcp-seo-accessibility:latest
+    environment:
+      - PORT=3000
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
+    networks:
+      - default
+
+  mcp-code-review:
+    image: ghcr.io/midnghtsapphire/mcp-code-review:latest
+    environment:
+      - PORT=3000
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
+    networks:
+      - default
+
+  mcp-ai-chat:
+    image: ghcr.io/midnghtsapphire/mcp-ai-chat:latest
+    environment:
+      - PORT=3000
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
+    networks:
+      - default
+
 volumes:
   db_data:
+
+networks:
+  default:
+    driver: bridge

@@ -3,6 +3,9 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Logo } from "@/components/Logo";
+import { trpc } from "@/lib/trpc";
+import { Loader2, Rocket, Code, Database, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -62,6 +65,8 @@ export default function Generate() {
       <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/">
+            <a className="flex items-center">
+              <Logo />
             <a>
               <Logo size="medium" showText={true} />
             </a>
