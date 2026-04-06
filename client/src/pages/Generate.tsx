@@ -6,36 +6,33 @@ import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/Logo";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Rocket, Code, Database, ArrowLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Logo, LogoPlaceholder } from "@/components/Logo";
+import { Loader2, Send, Facebook, Linkedin, Instagram, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 
 /**
- * Generate Page - The core of InTheWild
- * Simple: prompt input + generate button
- * Fast: instant full-stack generation
+ * Main Dashboard - Content Creation & Social Media Marketing
+ * Unified interface for managing reviews and social media posts
  */
 export default function Generate() {
   const { user, loading: authLoading } = useAuth();
-  const [prompt, setPrompt] = useState("");
-  const [projectName, setProjectName] = useState("");
-
-  const generateMutation = trpc.generation.generate.useMutation({
-    onSuccess: (data) => {
-      toast.success(`Project "${data.projectName}" generated successfully!`);
-      // Redirect to project view
-      window.location.href = `/project/${data.projectId}`;
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to generate project");
-    },
+  const [content, setContent] = useState("");
+  const [platforms, setPlatforms] = useState({
+    facebook: false,
+    linkedin: false,
+    instagram: false,
+    tiktok: false,
   });
-
-  const usageQuery = trpc.billing.getUsage.useQuery();
-
+  const [budget, setBudget] = useState("");
+  
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-slate-900 to-green-950">
-        <Loader2 className="w-12 h-12 animate-spin text-green-400" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <Loader2 className="w-12 h-12 animate-spin text-slate-600" />
       </div>
     );
   }
@@ -45,167 +42,187 @@ export default function Generate() {
     return null;
   }
 
-  const handleGenerate = () => {
-    if (!prompt.trim()) {
-      toast.error("Please enter a description of your app");
+  const handlePublish = () => {
+    if (!content.trim()) {
+      toast.error("Please enter content to publish");
       return;
     }
 
-    generateMutation.mutate({
-      prompt: prompt.trim(),
-      projectName: projectName.trim() || undefined,
-    });
+    const selectedPlatforms = Object.entries(platforms)
+      .filter(([_, selected]) => selected)
+      .map(([platformName, _]) => platformName);
+
+    if (selectedPlatforms.length === 0) {
+      toast.error("Please select at least one platform");
+      return;
+    }
+
+    toast.success(`Publishing to ${selectedPlatforms.join(", ")}`);
   };
 
-  const isGenerating = generateMutation.isPending;
-  const tokensUsed = usageQuery.data?.tokensUsed || 0;
-  const monthlyLimit = usageQuery.data?.monthlyLimit || 50000;
-  const percentageUsed = usageQuery.data?.percentageUsed || 0;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-slate-900 to-green-950 text-white">
-      {/* Header */}
-      <header className="border-b border-purple-800/30 bg-black/20 backdrop-blur-sm">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/">
             <a className="flex items-center">
               <Logo />
+            <a>
+              <Logo size="medium" showText={true} />
             </a>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/projects">
-              <Button variant="ghost" className="text-slate-300 hover:text-white">
-                My Projects
-              </Button>
-            </Link>
-            <div className="text-sm text-slate-400">
+            <div className="text-sm text-slate-600 dark:text-slate-400">
               {user.name || user.email}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* Token Usage */}
-        <Card className="bg-black/40 border-purple-500/20 p-4 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm text-slate-400">Token Usage This Month</div>
-              <div className="text-2xl font-bold text-white">
-                {tokensUsed.toLocaleString()} / {monthlyLimit.toLocaleString()}
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-slate-400">{usageQuery.data?.tier || "free"} tier</div>
-              <div className="text-lg font-semibold text-green-400">
-                {percentageUsed.toFixed(1)}% used
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 h-2 bg-slate-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-purple-500 to-green-500 transition-all"
-              style={{ width: `${Math.min(percentageUsed, 100)}%` }}
-            />
-          </div>
-        </Card>
-
-        {/* Generation Form */}
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Generate Full-Stack App</h2>
-            <p className="text-slate-400">
-              Describe your app and we'll generate the complete stack: frontend, backend, database, and deployment.
-            </p>
-          </div>
-
-          {/* Project Name (Optional) */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Project Name (optional)
-            </label>
-            <input
-              type="text"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              placeholder="my-awesome-app"
-              className="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
-              disabled={isGenerating}
-            />
-          </div>
-
-          {/* Prompt Input */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Describe Your App
-            </label>
-            <Textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Example: A todo app with user authentication, categories, and due dates. Users can create, edit, and delete tasks. Include a dashboard showing task statistics."
-              className="min-h-[200px] bg-black/40 border-purple-500/30 text-white placeholder-slate-500 focus:border-purple-500"
-              disabled={isGenerating}
-            />
-            <div className="mt-2 text-sm text-slate-400">
-              Be specific about features, data models, and user flows for best results.
-            </div>
-          </div>
-
-          {/* Generate Button */}
-          <Button
-            onClick={handleGenerate}
-            disabled={isGenerating || !prompt.trim()}
-            size="lg"
-            className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white py-6 text-lg"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Generating Full Stack...
-              </>
-            ) : (
-              <>
-                <Rocket className="w-5 h-5 mr-2" />
-                Generate Complete App
-              </>
-            )}
-          </Button>
-
-          {/* What Gets Generated */}
-          <Card className="bg-black/40 border-green-500/20 p-6">
-            <h3 className="text-lg font-semibold text-green-300 mb-4">What Gets Generated:</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-3">
-                <Code className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="p-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-slate-50">Create Content</h2>
+              <div className="space-y-4">
                 <div>
-                  <div className="font-medium text-white">Frontend</div>
-                  <div className="text-sm text-slate-400">React components, routing, UI</div>
+                  <Label htmlFor="content" className="text-slate-700 dark:text-slate-300">Content</Label>
+                  <Textarea
+                    id="content"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Write your review, post, or announcement..."
+                    className="min-h-[200px] mt-2 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-slate-700 dark:text-slate-300 mb-3 block">Publish To</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <Checkbox
+                        id="facebook"
+                        checked={platforms.facebook}
+                        onCheckedChange={(checked) =>
+                          setPlatforms({ ...platforms, facebook: !!checked })
+                        }
+                      />
+                      <label htmlFor="facebook" className="flex items-center gap-2 text-sm font-medium cursor-pointer flex-1">
+                        <Facebook className="w-4 h-4" />
+                        Facebook
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <Checkbox
+                        id="linkedin"
+                        checked={platforms.linkedin}
+                        onCheckedChange={(checked) =>
+                          setPlatforms({ ...platforms, linkedin: !!checked })
+                        }
+                      />
+                      <label htmlFor="linkedin" className="flex items-center gap-2 text-sm font-medium cursor-pointer flex-1">
+                        <Linkedin className="w-4 h-4" />
+                        LinkedIn
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <Checkbox
+                        id="instagram"
+                        checked={platforms.instagram}
+                        onCheckedChange={(checked) =>
+                          setPlatforms({ ...platforms, instagram: !!checked })
+                        }
+                      />
+                      <label htmlFor="instagram" className="flex items-center gap-2 text-sm font-medium cursor-pointer flex-1">
+                        <Instagram className="w-4 h-4" />
+                        Instagram
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <Checkbox
+                        id="tiktok"
+                        checked={platforms.tiktok}
+                        onCheckedChange={(checked) =>
+                          setPlatforms({ ...platforms, tiktok: !!checked })
+                        }
+                      />
+                      <label htmlFor="tiktok" className="flex items-center gap-2 text-sm font-medium cursor-pointer flex-1">
+                        <TrendingUp className="w-4 h-4" />
+                        TikTok
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="budget" className="text-slate-700 dark:text-slate-300">
+                    Marketing Budget (Optional)
+                  </Label>
+                  <Input
+                    id="budget"
+                    type="number"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    placeholder="Enter amount in USD"
+                    className="mt-2 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                  />
+                  <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                    Set a budget for promoted posts across platforms
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handlePublish}
+                  className="w-full bg-slate-900 dark:bg-slate-50 text-slate-50 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200"
+                  size="lg"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Publish Content
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-50">Recent Posts</h3>
+              <div className="text-center py-8 text-slate-500 dark:text-slate-500">
+                No posts yet. Create your first post above!
+              </div>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <Card className="p-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-50">Brand Logo</h3>
+              <LogoPlaceholder />
+            </Card>
+
+            <Card className="p-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-50">Performance</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-slate-600 dark:text-slate-400">Total Posts</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-50">0</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-slate-600 dark:text-slate-400">Total Reach</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-50">0</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-slate-600 dark:text-slate-400">Engagement</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-50">0%</span>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Code className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-white">Backend</div>
-                  <div className="text-sm text-slate-400">Express routes, controllers, middleware</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Database className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-white">Database</div>
-                  <div className="text-sm text-slate-400">Schema, migrations, models</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Rocket className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-white">Deployment</div>
-                  <div className="text-sm text-slate-400">Docker, env config, hosting</div>
-                </div>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
       </main>
     </div>
