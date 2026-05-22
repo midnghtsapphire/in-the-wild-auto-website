@@ -35,11 +35,49 @@ export interface ParallelResult {
   totalTokens: number;
 }
 
+interface OpenRouterChatCompletionInput {
+  model: string;
+  messages: Array<{ role: "system" | "user" | "assistant"; content: string }>;
+  temperature?: number;
+  max_tokens?: number;
+}
+
+interface OpenRouterChatCompletionResponse {
+  choices: Array<{ message: { content: string } }>;
+}
+
 function getApiKey(): string {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error("OPENROUTER_API_KEY is not configured");
   return key;
 }
+
+export const openrouterClient = {
+  chat: {
+    completions: {
+      async create(input: OpenRouterChatCompletionInput): Promise<OpenRouterChatCompletionResponse> {
+        const apiKey = getApiKey();
+        const response = await fetch(OPENROUTER_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+            "HTTP-Referer": "https://inthewild.app",
+            "X-Title": "InTheWild AI Website Generator",
+          },
+          body: JSON.stringify(input),
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`OpenRouter ${response.status}: ${errText}`);
+        }
+
+        return response.json();
+      },
+    },
+  },
+};
 
 async function callModel(model: string, systemPrompt: string, userPrompt: string): Promise<LLMResponse> {
   const start = Date.now();
