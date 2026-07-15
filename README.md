@@ -1,5 +1,12 @@
 # Reese-Reviews - Professional Content & Social Media Platform
 
+
+<!-- AUTO-PACKAGE-BADGES:START -->
+<!-- Auto-generated package badges -->
+
+![npm version](https://img.shields.io/npm/v/reese-reviews?style=flat-square&logo=npm&color=blue) ![npm downloads](https://img.shields.io/npm/dw/reese-reviews?style=flat-square&color=brightgreen) ![npm license](https://img.shields.io/npm/l/reese-reviews?style=flat-square) [![Deployed](https://img.shields.io/badge/deployed-1.0.0-blue?style=flat-square)](https://www.npmjs.com/package/reese-reviews)
+
+<!-- AUTO-PACKAGE-BADGES:END -->
 **Tagline:** "Professional Reviews & Content"
 
 Reese-Reviews is a unified platform for creating professional reviews and managing social media content across multiple platforms. Built with a clean, professional steel/neutral design aesthetic.
