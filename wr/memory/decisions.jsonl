@@ -1,0 +1,1 @@
+{"timestamp": "2026-10-31T22:30:00Z", "decision": "Fix CI/CD deploy.yml pinned versions and type errors in blueOceanRouters.ts", "context": "Workflow was failing because pnpm version wasn't pinned properly. Also found some local TS errors during check step.", "author": "Agent"}

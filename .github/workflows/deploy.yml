@@ -28,13 +28,15 @@ jobs:
   # ── 1. Type-check and test ─────────────────────────────────────────────────
   test:
     name: Type-check & Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - uses: actions/setup-node@v4
         with:
@@ -53,7 +55,7 @@ jobs:
   # ── 2. Build & push Docker image ──────────────────────────────────────────
   build:
     name: Build & Push Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test
     # Only push on merges to main (not PRs)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -96,7 +98,7 @@ jobs:
   # ── 3. Deploy to DigitalOcean App Platform ─────────────────────────────────
   deploy:
     name: Deploy to DigitalOcean
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
