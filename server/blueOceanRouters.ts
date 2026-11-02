@@ -52,7 +52,7 @@ export const blueOceanRouter = router({
       .input(
         z.object({
           templateId: z.string(),
-          customizations: z.record(z.any()).optional(),
+          customizations: z.record(z.string(), z.any()).optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -95,7 +95,7 @@ export const blueOceanRouter = router({
           platform: z.enum(["vercel", "netlify", "railway", "docker"]),
           domain: z.string().optional(),
           customDomain: z.string().optional(),
-          envVars: z.record(z.string()),
+          envVars: z.record(z.string(), z.string()),
           buildCommand: z.string().optional(),
           startCommand: z.string().optional(),
         })
@@ -142,7 +142,7 @@ export const blueOceanRouter = router({
         })
       )
       .mutation(async ({ ctx, input }) => {
-        const template = await templateMarketplace.listTemplate(ctx.user.id, input);
+        const template = await templateMarketplace.listTemplate(ctx.user.id.toString(), input);
         return { success: true, data: template };
       }),
 
@@ -176,7 +176,7 @@ export const blueOceanRouter = router({
     purchaseTemplate: protectedProcedure
       .input(z.object({ templateId: z.string() }))
       .mutation(async ({ ctx, input }) => {
-        const result = await templateMarketplace.purchaseTemplate(ctx.user.id, input.templateId);
+        const result = await templateMarketplace.purchaseTemplate(ctx.user.id.toString(), input.templateId);
         if (!result.success) {
           throw new TRPCError({ code: "BAD_REQUEST", message: result.error || "Purchase failed" });
         }
@@ -184,7 +184,7 @@ export const blueOceanRouter = router({
       }),
 
     getUserTemplates: protectedProcedure.query(async ({ ctx }) => {
-      const templates = await templateMarketplace.getUserTemplates(ctx.user.id);
+      const templates = await templateMarketplace.getUserTemplates(ctx.user.id.toString());
       return templates;
     }),
 
@@ -203,7 +203,7 @@ export const blueOceanRouter = router({
       )
       .mutation(async ({ ctx, input }) => {
         const result = await templateMarketplace.rateTemplate(
-          ctx.user.id,
+          ctx.user.id.toString(),
           input.templateId,
           input.rating,
           input.review
